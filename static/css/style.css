@@ -1,0 +1,105 @@
+:root {
+    --brand-dark: #1a1a2e;
+    --brand-primary: #2563eb;
+}
+
+body {
+    background: #f4f6f9;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.app-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    background: var(--brand-dark);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem 0;
+}
+
+.sidebar-brand {
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 0 1.25rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar .nav-link {
+    color: rgba(255,255,255,0.75);
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+    border-left: 3px solid transparent;
+}
+
+.sidebar .nav-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+}
+
+.sidebar .nav-link.active {
+    color: #fff;
+    background: rgba(37,99,235,0.2);
+    border-left-color: var(--brand-primary);
+}
+
+.sidebar-user {
+    margin-top: auto;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.main-content {
+    margin-left: 240px;
+    padding: 2rem;
+    flex: 1;
+}
+
+.kpi-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.kpi-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.badge-status {
+    font-weight: 500;
+}
+
+.folder-card {
+    cursor: pointer;
+    transition: box-shadow 0.15s ease;
+}
+
+.folder-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--brand-dark);
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 380px;
+}

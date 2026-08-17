@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Nova Ordem de Serviço{% endblock %}
+{% block content %}
+<h1 class="h4 mb-4">Nova Ordem de Serviço</h1>
+<div class="kpi-card" style="max-width: 640px;">
+    <form method="POST">
+        <div class="row g-3">
+            <div class="col-12">
+                <label class="form-label">Título</label>
+                <input type="text" name="title" class="form-control" required>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Descrição</label>
+                <textarea name="description" class="form-control" rows="2"></textarea>
+            </div>
+            <div class="col-6">
+                <label class="form-label">Loja</label>
+                <select name="store_id" class="form-select">
+                    <option value="">Selecione</option>
+                    {% for s in stores %}<option value="{{ s.id }}">{{ s.code }} - {{ s.name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-6">
+                <label class="form-label">Fornecedor</label>
+                <select name="supplier_id" class="form-select">
+                    <option value="">Selecione</option>
+                    {% for sup in suppliers %}<option value="{{ sup.id }}">{{ sup.name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-6">
+                <label class="form-label">Categoria</label>
+                <select name="category" class="form-select">
+                    {% for k, v in category_labels.items() %}
+                    {% if k != 'equipamento' %}<option value="{{ k }}">{{ v }}</option>{% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-6">
+                <label class="form-label">Prioridade</label>
+                <select name="priority" class="form-select">
+                    <option value="baixa">Baixa</option>
+                    <option value="media" selected>Média</option>
+                    <option value="alta">Alta</option>
+                    <option value="urgente">Urgente</option>
+                </select>
+            </div>
+            <div class="col-6">
+                <label class="form-label">Data Início</label>
+                <input type="date" name="start_date" class="form-control">
+            </div>
+            <div class="col-6">
+                <label class="form-label">Data Fim Prevista</label>
+                <input type="date" name="end_date" class="form-control">
+            </div>
+            <div class="col-6">
+                <label class="form-label">Chamado (código, opcional)</label>
+                <input type="text" name="request_code" class="form-control">
+            </div>
+            <div class="col-6">
+                <label class="form-label">Custo Estimado (R$)</label>
+                <input type="number" step="0.01" name="estimated_cost" class="form-control">
+            </div>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Criar OS</button>
+            <a href="{{ url_for('service_orders.index') }}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

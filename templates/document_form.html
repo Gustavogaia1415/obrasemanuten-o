@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Novo Documento{% endblock %}
+{% block content %}
+<h1 class="h4 mb-4">Cadastrar Documento</h1>
+<div class="kpi-card" style="max-width: 640px;">
+    <form method="POST" enctype="multipart/form-data">
+        <div class="row g-3">
+            <div class="col-12">
+                <label class="form-label">Nome</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Subpasta (opcional)</label>
+                <input type="text" name="subfolder" class="form-control">
+            </div>
+            <div class="col-12">
+                <label class="form-label">Descrição</label>
+                <textarea name="description" class="form-control" rows="2"></textarea>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Arquivos</label>
+                <input type="file" name="files" class="form-control" multiple>
+                <div class="form-text">Selecione um ou mais arquivos</div>
+            </div>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+            <a href="{{ url_for('documents.folder_docs', store_id=store.id, folder_key=folder_key) }}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

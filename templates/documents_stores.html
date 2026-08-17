@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Documentos{% endblock %}
+{% block content %}
+<h1 class="h3 mb-1">Documentos</h1>
+<p class="text-muted mb-4">Organização por loja e tipo de documento</p>
+
+<div class="row g-3">
+    {% for s in stores %}
+    <div class="col-md-6 col-lg-4">
+        <a href="{{ url_for('documents.folders_grid', store_id=s.id) }}" class="text-decoration-none">
+            <div class="kpi-card folder-card d-flex align-items-center gap-3">
+                <i class="bi bi-folder2-open fs-2 text-primary"></i>
+                <div>
+                    <div class="fw-semibold text-dark">{{ s.code }} - {{ s.name }}</div>
+                    <div class="small text-muted">{{ counts.get(s.id, 0) }} documento(s)</div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% else %}
+    <p class="text-muted">Cadastre uma loja primeiro para organizar documentos.</p>
+    {% endfor %}
+</div>
+{% endblock %}

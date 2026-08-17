@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Pastas - {{ store.name }}{% endblock %}
+{% block content %}
+<a href="{{ url_for('documents.stores_grid') }}" class="btn btn-link ps-0 mb-2">← Voltar para Lojas</a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h4 mb-0">{{ store.name }}</h2>
+    {% if current_user.is_admin %}
+    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#newFolderModal">
+        <i class="bi bi-folder-plus"></i> Nova Pasta
+    </button>
+    {% endif %}
+</div>
+
+<div class="row g-3">
+    {% for key, label in folder_labels.items() %}
+        {% if key != 'personalizada' %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <a href="{{ url_for('documents.folder_docs', store_id=store.id, folder_key=key) }}" class="text-decoration-none">
+                <div class="kpi-card folder-card d-flex align-items-center gap-2">
+                    <i class="bi bi-folder2 text-primary"></i>
+                    <div>
+                        <div class="small fw-medium text-dark">{{ label }}</div>
+                        <div class="small text-muted">{{ folder_counts.get(key, 0) }} doc(s)</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+    {% endfor %}
+    {% for f in custom_folders %}
+    <div class="col-6 col-md-4 col-lg-3">
+        <a href="{{ url_for('documents.folder_docs', store_id=store.id, folder_key='custom_' + f.id) }}" class="text-decoration-none">
+            <div class="kpi-card folder-card d-flex align-items-center gap-2">
+                <i class="bi bi-folder2 text-warning"></i>
+                <div>
+                    <div class="small fw-medium text-dark">{{ f.name }}</div>
+                    <div class="small text-muted">{{ custom_counts.get(f.id, 0) }} doc(s)</div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="modal fade" id="newFolderModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('documents.create_folder', store_id=store.id) }}">
+                <div class="modal-header">
+                    <h5 class="modal-title">Criar Pasta Personalizada</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">Nome da Pasta</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Criar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

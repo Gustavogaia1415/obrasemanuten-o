@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Ordens de Serviço{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <h1 class="h3 mb-1">Ordens de Serviço</h1>
+        <p class="text-muted mb-0">Gerencie as ordens de serviço</p>
+    </div>
+    {% if current_user.is_admin %}
+    <a href="{{ url_for('service_orders.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nova OS</a>
+    {% endif %}
+</div>
+
+<div class="kpi-card p-0">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>Código</th><th>Loja</th><th>Título</th><th>Categoria</th>
+                <th>Status</th><th>Custo Est.</th><th>Início</th>
+                {% if current_user.is_admin %}<th></th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for o in orders %}
+            <tr>
+                <td class="font-monospace small">{{ o.code }}</td>
+                <td>{{ o.store.code if o.store else '-' }}</td>
+                <td class="fw-medium">{{ o.title }}</td>
+                <td>{{ category_labels.get(o.category, o.category) }}</td>
+                <td>
+                    {% if current_user.is_admin %}
+                    <form method="POST" action="{{ url_for('service_orders.update_status', order_id=o.id) }}" class="d-inline">
+                        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+                            {% for k, v in status_labels.items() %}
+                            <option value="{{ k }}" {{ 'selected' if o.status == k else '' }}>{{ v }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                    {% else %}
+                    <span class="badge bg-secondary">{{ status_labels.get(o.status, o.status) }}</span>
+                    {% endif %}
+                </td>
+                <td>R$ {{ "%.2f"|format(o.estimated_cost or 0) }}</td>
+                <td class="small">{{ o.start_date.strftime('%d/%m/%y') if o.start_date else '-' }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="7" class="text-center text-muted py-4">Nenhuma OS cadastrada</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

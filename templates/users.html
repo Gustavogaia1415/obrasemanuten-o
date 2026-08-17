@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Usuários{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <h1 class="h3 mb-1">Usuários</h1>
+        <p class="text-muted mb-0">Gerencie quem tem acesso ao sistema</p>
+    </div>
+    <a href="{{ url_for('users.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Novo Usuário</a>
+</div>
+
+<div class="kpi-card p-0">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>Nome</th><th>E-mail</th><th>Nível</th><th>Status</th><th class="text-end">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for u in users %}
+            <tr>
+                <td class="fw-medium">{{ u.name }}</td>
+                <td>{{ u.email }}</td>
+                <td>
+                    <span class="badge {{ 'bg-primary' if u.is_admin else 'bg-secondary' }}">
+                        {{ 'Admin' if u.is_admin else 'Usuário' }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge {{ 'bg-success' if u.active else 'bg-danger' }}">
+                        {{ 'Ativo' if u.active else 'Desativado' }}
+                    </span>
+                </td>
+                <td class="text-end">
+                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#resetModal{{ u.id }}">
+                        <i class="bi bi-key"></i> Redefinir senha
+                    </button>
+                    {% if u.id != current_user.id %}
+                    <form method="POST" action="{{ url_for('users.toggle_active', user_id=u.id) }}" class="d-inline">
+                        <button class="btn btn-sm {{ 'btn-outline-danger' if u.active else 'btn-outline-success' }}">
+                            {{ 'Desativar' if u.active else 'Reativar' }}
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+
+            <div class="modal fade" id="resetModal{{ u.id }}" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST" action="{{ url_for('users.reset_password', user_id=u.id) }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Redefinir senha de {{ u.name }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <label class="form-label">Nova senha provisória</label>
+                                <input type="text" name="new_password" class="form-control" required minlength="6">
+                                <div class="form-text">Repasse essa senha pra pessoa por WhatsApp ou outro meio seguro.</div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Redefinir</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <tr><td colspan="5" class="text-center text-muted py-4">Nenhum usuário cadastrado</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

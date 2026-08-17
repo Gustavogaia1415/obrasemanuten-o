@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Lojas{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+        <h1 class="h3 mb-1">Lojas</h1>
+        <p class="text-muted mb-0">Gerencie o cadastro das lojas</p>
+    </div>
+    {% if current_user.is_admin %}
+    <a href="{{ url_for('stores.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nova Loja</a>
+    {% endif %}
+</div>
+
+<div class="kpi-card p-0">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>Código</th><th>Nome</th><th>Cidade/UF</th><th>Responsável</th>
+                <th>Status</th><th>Orç. Anual</th>
+                {% if current_user.is_admin %}<th class="text-end">Ações</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for s in stores %}
+            <tr>
+                <td class="font-monospace">{{ s.code }}</td>
+                <td class="fw-medium">{{ s.name }}</td>
+                <td>{{ s.city }}{% if s.state %}/{{ s.state }}{% endif %}</td>
+                <td>{{ s.manager or '-' }}</td>
+                <td>
+                    <span class="badge badge-status {{ 'bg-success' if s.status == 'ativa' else ('bg-danger' if s.status == 'inativa' else 'bg-warning text-dark') }}">
+                        {{ {'ativa': 'Ativa', 'inativa': 'Inativa', 'em_reforma': 'Em Reforma'}.get(s.status, s.status) }}
+                    </span>
+                </td>
+                <td>R$ {{ "%.2f"|format(s.annual_budget or 0) }}</td>
+                {% if current_user.is_admin %}
+                <td class="text-end">
+                    <a href="{{ url_for('stores.edit', store_id=s.id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                    <form method="POST" action="{{ url_for('stores.delete', store_id=s.id) }}" class="d-inline" onsubmit="return confirm('Excluir esta loja?');">
+                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr><td colspan="7" class="text-center text-muted py-4">Nenhuma loja cadastrada</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

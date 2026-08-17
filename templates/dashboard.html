@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1 class="h3 mb-1">Dashboard</h1>
+<p class="text-muted mb-4">Visão geral operacional e financeira</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card">
+            <div class="text-muted small">OS Programadas</div>
+            <div class="kpi-value">{{ os_scheduled }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card">
+            <div class="text-muted small">OS Finalizadas</div>
+            <div class="kpi-value">{{ os_finished }}</div>
+            <div class="small text-success">{{ finished_pct }}%</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card">
+            <div class="text-muted small">Lojas Cadastradas</div>
+            <div class="kpi-value">{{ total_stores }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card">
+            <div class="text-muted small">Custo Total (R$)</div>
+            <div class="kpi-value">{{ "%.2f"|format(total_cost) }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="kpi-card">
+            <h6 class="mb-3">OS por Status</h6>
+            {% for name, count in status_data %}
+            <div class="d-flex justify-content-between small mb-2">
+                <span class="text-muted">{{ name }}</span>
+                <span class="fw-bold">{{ count }}</span>
+            </div>
+            {% else %}
+            <p class="text-muted small mb-0">Nenhuma OS cadastrada ainda.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="kpi-card">
+            <h6 class="mb-3">Custo por Loja</h6>
+            {% for name, valor in cost_by_store %}
+            <div class="mb-2">
+                <div class="d-flex justify-content-between small">
+                    <span class="text-muted">{{ name }}</span>
+                    <span class="fw-bold">R$ {{ "%.2f"|format(valor) }}</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                    <div class="progress-bar" style="width: {{ (valor / cost_by_store[0][1] * 100) if cost_by_store else 0 }}%"></div>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-muted small mb-0">Nenhum custo registrado ainda.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="kpi-card mt-3">
+    <h6 class="mb-2">Orçamento</h6>
+    <div class="small text-muted mb-1">
+        Utilizado: R$ {{ "%.2f"|format(total_cost) }} de R$ {{ "%.2f"|format(total_budget) }} ({{ budget_pct }}%)
+    </div>
+    <div class="progress" style="height: 10px;">
+        <div class="progress-bar {{ 'bg-danger' if budget_pct > 80 else 'bg-warning' }}" style="width: {{ budget_pct if budget_pct <= 100 else 100 }}%"></div>
+    </div>
+</div>
+{% endblock %}
