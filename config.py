@@ -17,23 +17,19 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL', f"sqlite:///{os.path.join(basedir, 'app.db')}"
     )
-    # Corrige um detalhe: alguns provedores (Render, Supabase) dão a URL como "postgres://"
+    # Corrige um detalhe: alguns provedores dão a URL como "postgres://",
     # mas o SQLAlchemy moderno exige "postgresql://". Isso ajusta automaticamente.
     if SQLALCHEMY_DATABASE_URI.startswith('postgres://'):
         SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace(
             'postgres://', 'postgresql://', 1
         )
-    # Usa o driver pg8000 (100% Python, não exige compilar nada no Windows).
+    # Usa o driver psycopg (versão 3), que já está no requirements.txt.
     if SQLALCHEMY_DATABASE_URI.startswith('postgresql://'):
         SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace(
-            'postgresql://', 'postgresql+pg8000://', 1
+            'postgresql://', 'postgresql+psycopg://', 1
         )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    SQLALCHEMY_ENGINE_OPTIONS = {
-    'connect_args': {'prepare_threshold': None}
-}
 
     # --- Upload de arquivos ---
     # 'local'  -> guarda os arquivos numa pasta do próprio servidor (só pra teste/dev).
